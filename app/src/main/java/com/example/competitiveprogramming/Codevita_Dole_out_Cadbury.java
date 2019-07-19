@@ -3,33 +3,41 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.Scanner;
 import java.util.StringTokenizer;
 
-class BEG_Deadly_sins {
-	static FastReader fastReader=new FastReader();
-	static BufferedWriter bufferedWriter=new BufferedWriter(new OutputStreamWriter(System.out));
-	static StringBuffer stringBuffer=new StringBuffer();
+class Codevita_Dole_out_Cadbury {
+	static Scanner fastReader=new Scanner(System.in);
 	public static void main(String[] args) {
 		try {
-			int testCases = fastReader.nextInt();
-			int x,y;
-			while (testCases-->0) {
-				x=fastReader.nextInt();
-				y=fastReader.nextInt();
-				while (!(x==0||y==0||x==y)) {
-					//System.out.println("x="+x+" y="+y);
-					if(Math.max(x, y)==x){
-						x-=y;
-					}else{
-						y-=x;
+			int minLength=fastReader.nextInt();
+			int maxLength=fastReader.nextInt();
+			int minWidth=fastReader.nextInt();
+			int maxWidth=fastReader.nextInt();
+			int ans=0;
+			for(int i=minLength;i<=maxLength;i++){
+				for(int j=minWidth;j<=maxWidth;j++){
+					int length=i;
+					int width=j;
+					//System.out.println("For: "+length+"x"+width+": ");
+					while(length!=width){
+						int min=Math.min(length,width);
+						if(min==length){
+							width-=length;
+							ans++;
+						}
+						else{
+							length-=width;
+							ans++;
+						}
+						//System.out.println("Current dimension:"+length+"x"+width);
 					}
+					ans++;
 				}
-				stringBuffer.append(x+y).append("\n");
 			}
-			bufferedWriter.write(stringBuffer.toString());
-			bufferedWriter.flush();
+			System.out.print(ans);
 		}catch (Exception e){
-			return;
+			e.printStackTrace();
 		}
 	}
 

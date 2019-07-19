@@ -5,31 +5,22 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.StringTokenizer;
 
-class BEG_Deadly_sins {
+class M_Pairwise_AND_Sum {
 	static FastReader fastReader=new FastReader();
-	static BufferedWriter bufferedWriter=new BufferedWriter(new OutputStreamWriter(System.out));
-	static StringBuffer stringBuffer=new StringBuffer();
 	public static void main(String[] args) {
 		try {
-			int testCases = fastReader.nextInt();
-			int x,y;
-			while (testCases-->0) {
-				x=fastReader.nextInt();
-				y=fastReader.nextInt();
-				while (!(x==0||y==0||x==y)) {
-					//System.out.println("x="+x+" y="+y);
-					if(Math.max(x, y)==x){
-						x-=y;
-					}else{
-						y-=x;
-					}
+			int n=fastReader.nextInt();
+			long arr[]=new long[n];
+			long sum=0;
+			for(int i=0;i<n;i++){
+				arr[i]=fastReader.nextLong();
+				for(int j=0;j<i;j++){
+					sum+=(arr[i]&arr[j]);
 				}
-				stringBuffer.append(x+y).append("\n");
 			}
-			bufferedWriter.write(stringBuffer.toString());
-			bufferedWriter.flush();
+			System.out.println(sum);
 		}catch (Exception e){
-			return;
+			e.printStackTrace();
 		}
 	}
 

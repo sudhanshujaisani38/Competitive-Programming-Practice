@@ -2,35 +2,38 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.util.StringTokenizer;
 
-class BEG_Deadly_sins {
+class Codevita_Prime_Face {
 	static FastReader fastReader=new FastReader();
-	static BufferedWriter bufferedWriter=new BufferedWriter(new OutputStreamWriter(System.out));
-	static StringBuffer stringBuffer=new StringBuffer();
 	public static void main(String[] args) {
 		try {
-			int testCases = fastReader.nextInt();
-			int x,y;
-			while (testCases-->0) {
-				x=fastReader.nextInt();
-				y=fastReader.nextInt();
-				while (!(x==0||y==0||x==y)) {
-					//System.out.println("x="+x+" y="+y);
-					if(Math.max(x, y)==x){
-						x-=y;
-					}else{
-						y-=x;
-					}
-				}
-				stringBuffer.append(x+y).append("\n");
+			int maxChar='0';
+			String strNum=fastReader.next();
+			int s=fastReader.nextInt();
+			for(int i=0;i<strNum.length();i++){
+				if(strNum.charAt(i)>maxChar)
+					maxChar=strNum.charAt(i);
 			}
-			bufferedWriter.write(stringBuffer.toString());
-			bufferedWriter.flush();
+			maxChar=valueOfChar(maxChar);
+			int minBase=maxChar+1;
+			int minNum=0;
+			System.out.println(minBase);
+			for(int i=0;i<strNum.length();i++){
+				minNum+=((valueOfChar(strNum.charAt(i)))*(Math.pow(minBase,i)));
+			}
+			System.out.println(minNum);
 		}catch (Exception e){
 			return;
 		}
+	}
+	static  int valueOfChar(int ch){
+
+		if(ch>='0'&& ch<='9')
+			ch-=48;
+		else if(ch>='A' && ch<='Z')
+			ch-=55;
+		return  ch;
 	}
 
 	static class FastReader {

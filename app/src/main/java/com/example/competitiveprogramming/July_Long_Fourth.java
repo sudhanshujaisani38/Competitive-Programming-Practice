@@ -3,33 +3,58 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.StringTokenizer;
 
-class BEG_Deadly_sins {
+class July_Long_Fourth {
 	static FastReader fastReader=new FastReader();
 	static BufferedWriter bufferedWriter=new BufferedWriter(new OutputStreamWriter(System.out));
 	static StringBuffer stringBuffer=new StringBuffer();
 	public static void main(String[] args) {
 		try {
 			int testCases = fastReader.nextInt();
-			int x,y;
+			ArrayList<BigInteger>arr=new ArrayList();
+			int n,minIndex=-1;
+			BigInteger minSum,finalSum;
 			while (testCases-->0) {
-				x=fastReader.nextInt();
-				y=fastReader.nextInt();
-				while (!(x==0||y==0||x==y)) {
-					//System.out.println("x="+x+" y="+y);
-					if(Math.max(x, y)==x){
-						x-=y;
-					}else{
-						y-=x;
-					}
+				n=fastReader.nextInt();
+				arr.clear();
+				finalSum=BigInteger.ZERO;
+				for(int i=0;i<n;i++){
+					arr.add(BigInteger.valueOf(fastReader.nextInt()));
 				}
-				stringBuffer.append(x+y).append("\n");
+				for(int i=0;i<n-1;i++){
+					minSum=BigInteger.valueOf(Integer.MAX_VALUE);
+					for(int j=0;j<arr.size();j++){
+						if(j==(arr.size()-1)){
+							if(arr.get(arr.size()-1).add(arr.get(0)).compareTo(minSum)<0){
+								minSum=arr.get(arr.size()-1).add(arr.get(0));
+								minIndex=arr.size()-1;
+							}
+						}else{
+							if(arr.get(j).add(arr.get(j+1)).compareTo(minSum)<0){
+								minSum=arr.get(j).add(arr.get(j+1));
+								minIndex=j;
+							}
+						}
+					}
+					arr.set(minIndex,minSum);
+					if(minIndex==arr.size()-1){
+						//System.out.println("adding "+arr.get(minIndex)+"and"+ arr.get(0));
+						arr.remove(0);
+					}else{
+						//System.out.println("adding "+arr.get(minIndex)+"and"+ arr.get(minIndex+1));
+						arr.remove(minIndex+1);
+					}
+					finalSum=finalSum.add(minSum);
+				}
+				stringBuffer.append(finalSum.intValue()).append("\n");
 			}
 			bufferedWriter.write(stringBuffer.toString());
 			bufferedWriter.flush();
 		}catch (Exception e){
-			return;
+			e.printStackTrace();
 		}
 	}
 
