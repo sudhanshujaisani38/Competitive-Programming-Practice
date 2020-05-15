@@ -44,10 +44,10 @@ class Graph{
     public void addEdge(String x, String y){
         ArrayList<String> list1=adjList.getOrDefault(x, new ArrayList<String>());
         list1.add(y);
-        adjList.put(x, list1);
+        adjList.put(x, list1);  
 
         ArrayList<String> list2=adjList.getOrDefault(y, new ArrayList<String>());
-        list1.add(x);
+        list2.add(x);
         adjList.put(y, list2);
     }
     public static void main(String[] args) {
