@@ -1,29 +1,47 @@
+//this problem didn't worked without fast reader -_-
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Scanner;
+import java.util.StringTokenizer;
 
 class Graph {
 	int noOfNodes;
 	HashMap<Integer, ArrayList<Integer>> adjList = new HashMap<>();
 	boolean isVisited[];
-	HashMap<Pair,Integer> ans=new HashMap<>();
-	// static int dp[][];
-	// static boolean ansAvailable[][];
+	int parentOf[];
+	int depth[];
 
 	public Graph(int n) {
 		this.noOfNodes = n;
-		isVisited = new boolean[n];
-		ans=new HashMap<>();
-		// dp = new int[n + 1][n + 1];
-		// ansAvailable = new boolean[n + 1][n + 1];
+		isVisited = new boolean[n + 1];
+		depth = new int[n + 1];
+		parentOf = new int[n + 1];
 		for (int i = 0; i <= n; i++) {
 			adjList.put(i, new ArrayList<Integer>());
 		}
 	}
 
+	public void addEdge(int x, int y) {
+		adjList.get(x).add(y);
+		adjList.get(y).add(x);
+	}
+
+	private void actualDFS(int src, int d) {
+		isVisited[src] = true;
+		this.depth[src] = d;
+		ArrayList<Integer> neighbours = adjList.get(src);
+		for (Integer neighbour : neighbours) {
+			if (!isVisited[neighbour]) {
+				parentOf[neighbour] = src;
+				actualDFS(neighbour, d + 1);
+			}
+		}
+	}
+
 	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
+		FastReader sc = new FastReader();
 		int t = sc.nextInt();
 		while (t-- > 0) {
 			int n = sc.nextInt();
@@ -38,81 +56,115 @@ class Graph {
 				int sec = sc.nextInt();
 				g.addEdge(first, sec);
 			}
+			g.actualDFS(1, 0);
+			// Arrays.stream(g.depth).forEach(e -> System.out.print(e + ","));
+			// System.out.println();
+			// Arrays.stream(g.parentOf).forEach(e -> System.out.print(e + ","));
+			// System.out.println();
 			for (int i = 0; i < q; i++) {
-				g.isVisited = new boolean[n + 1];
 				int first = sc.nextInt();
 				int sec = sc.nextInt();
-				if (g.ans.get(new Pair(first,sec))!=null) {
-					System.out.println(g.ans.get(new Pair(first,sec)));
-					continue;
-				}
-				int parentOf[] = new int[n + 1];
-				g.actualDFS(first, sec, parentOf);
-				int parent = sec;
-				ArrayList<Integer> list = new ArrayList<>();
-				while (parent != first) {
-					list.add(a[parent]);
-					parent = parentOf[parent];
-				}
-				list.add(a[first]);
-				// System.out.println(list);
-				Collections.sort(list);
-				int minDiff = Integer.MAX_VALUE;
-				for (int j = 0; j < list.size() - 1; j++) {
-					int diff = list.get(j + 1) - list.get(j);
+				int ans = g.solve(first, sec, a);
+				System.out.println(ans);
+
+			}
+		}
+	}
+
+	private int solve(int first, int sec, int a[]) {
+		boolean alreadyFound[] = new boolean[101];
+		int d1 = depth[first];
+		int d2 = depth[sec];
+		if (d1 > d2) {
+			while (d1 != d2) {
+				if (alreadyFound[a[first]])
+					return 0;
+				alreadyFound[a[first]] = true;
+				d1--;
+				first = parentOf[first];
+			}
+
+		} else {
+			while (d1 != d2) {
+				if (alreadyFound[a[sec]])
+					return 0;
+				alreadyFound[a[sec]] = true;
+				// list.add(a[sec]);
+				d2--;
+				sec = parentOf[sec];
+			}
+
+		}
+		while (first != sec) {
+			if (alreadyFound[a[first]])
+				return 0;
+			alreadyFound[a[first]] = true;
+			if (alreadyFound[a[sec]])
+				return 0;
+			alreadyFound[a[sec]] = true;
+			first = parentOf[first];
+			sec = parentOf[sec];
+		}
+		if (alreadyFound[a[first]])
+			return 0;
+		alreadyFound[a[first]] = true;
+		// System.out.println(list);
+		// Arrays.stream(list).forEach(e->System.out.print(e+","));System.out.println();
+		// Arrays.sort(list);
+		int minDiff = Integer.MAX_VALUE;
+		int prev = -1;
+		for (int j = 1; j <= 100; j++) {
+			if (alreadyFound[j]) {
+				if (prev != -1) {
+					int diff = j - prev;
 					minDiff = Math.min(minDiff, diff);
 				}
-				// dp[first][sec] = minDiff;
-				// ansAvailable[first][sec] = true;
-				g.ans.put(new Pair(first,sec), minDiff);
-				g.ans.put(new Pair(sec,first), minDiff);
-				System.out.println(minDiff);
+				prev = j;
 			}
+
 		}
+		return minDiff;
 	}
 
-	public void addEdge(int x, int y) {
-		adjList.get(x).add(y);
-		adjList.get(y).add(x);
-	}
+	static class FastReader {
+		BufferedReader br;
+		StringTokenizer st;
 
-	private boolean actualDFS(int src, int dest, int parentOf[]) {
-		// System.out.print(src + ",");
-		isVisited[src] = true;
-		ArrayList<Integer> neighbours = adjList.get(src);
-		for (Integer neighbour : neighbours) {
-			if (!isVisited[neighbour]) {
-				parentOf[neighbour] = src;
-				if (neighbour == dest) {
-					return true;
+		public FastReader() {
+			br = new BufferedReader(new InputStreamReader(System.in));
+		}
+
+		String next() {
+			while (st == null || !st.hasMoreElements()) {
+				try {
+					st = new StringTokenizer(br.readLine());
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
-				boolean destFound = actualDFS(neighbour, dest, parentOf);
-				if (destFound) {
-					return true;
-				}
-
 			}
-		}
-		return false;
-	}
-
-	static class Pair implements Comparable<Pair>{
-		int first;
-		int sec;
-
-		public Pair(int d, int c) {
-			first = d;
-			sec = c;
+			return st.nextToken();
 		}
 
-		@Override
-		public int compareTo(Pair o) {
-			if(o.first==this.first && o.sec==this.sec){
-				return 0;
+		String nextLine() {
+			String str = "";
+			try {
+				str = br.readLine();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-			return this.first-o.first;
+			return str;
 		}
-		
-	}
 
+		int nextInt() {
+			return Integer.parseInt(next());
+		}
+
+		long nextLong() {
+			return Long.parseLong(next());
+		}
+
+		double nextDouble() {
+			return Double.parseDouble(next());
+		}
+	}
 }
