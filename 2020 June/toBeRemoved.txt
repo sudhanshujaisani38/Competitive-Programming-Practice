@@ -1,3 +1,4 @@
 solved 1 to 5
 solved 8th partially
 optimized Challenge
+solved 6th partially
