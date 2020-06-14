@@ -8,3 +8,4 @@ solved 6th
 tried solving 7th,failed
 optimized challenge very little
 tried 7th again, failed
+solved 7th
