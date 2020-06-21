@@ -14,6 +14,18 @@ class Main {
         try {
             int testCases = fastReader.nextInt();
             while (testCases-- > 0) {
+                int n=fastReader.nextInt();
+                int b=fastReader.nextInt();
+                int m=fastReader.nextInt();
+                int queries[]=fastReader.inputIntegerArray(m);
+                int prev=-1,curr=-1;
+                int ans=0;
+                for(int i=0;i<m;i++){
+                    curr=queries[i]/b+1;
+                    if(prev!=curr)ans++;
+                    prev=curr;
+                }
+                System.out.println(ans);
             }
             bufferedWriter.write(stringBuffer.toString());
             bufferedWriter.flush();
