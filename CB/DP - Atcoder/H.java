@@ -66,7 +66,7 @@ class H {
         if(i==0 && j==0){
             return 1; //base case
         }
-        if(grid[i][j]=='#'){
+        if(grid[i][j]=='#'){//if there is wall
             return 0;
         }
         if(dp[i][j]!=-1){
