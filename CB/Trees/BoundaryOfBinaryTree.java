@@ -2,16 +2,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BoundaryOfBinaryTree {
-     List<Integer> boundary = new ArrayList<>();
-     boolean isFirstLeafFound =  false;
+    List<Integer> boundary = new ArrayList<>();
+     boolean isBoundaryAdded =  false;
     public List<Integer> boundaryOfBinaryTree(TreeNode root) {
         if(root == null) return null;
-        boundary.add(root.val);
         if(root.left == null)
-        {            
-            isFirstLeafFound = true;
+        {
+            boundary.add(root.val);
+            isBoundaryAdded = true;
         }
-        addLeftBoundaryAndLeaves(root.left);
+        addLeftBoundaryAndLeaves(root);
         addRightBoundaryInReverse(root.right);
         return boundary;
     }
@@ -21,9 +21,9 @@ public class BoundaryOfBinaryTree {
         if(root.left == null && root.right == null)
         {
             boundary.add(root.val);
-            isFirstLeafFound = true;
+            isBoundaryAdded = true;
         }
-        else if(!isFirstLeafFound)
+        else if(!isBoundaryAdded)
         {
             boundary.add(root.val);            
         }
